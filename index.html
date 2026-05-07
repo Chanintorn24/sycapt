@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <title>Sycapt Co., Ltd. &#8211; Payment, Transaction Switching, and Loyalty application</title>
+    
+    <link href='https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap' rel='stylesheet'>
+    <style type="text/css">
+        @font-face {
+            font-family: "NotoSansThai-Bold";
+            src: url("https://sycapt-semplice-hnbmvakdyq-as.a.run.app/5lab-cdn/sycapt/NotoSansThai-Bold.ttf") format("truetype");
+        }
+        @font-face {
+            font-family: "NotoSansThai-Regular";
+            src: url("https://sycapt-semplice-hnbmvakdyq-as.a.run.app/5lab-cdn/sycapt/NotoSansThai-Regular.ttf") format("truetype");
+        }
+
+        /* Basic Resets & Typography */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "DM Sans", "NotoSansThai-Regular", sans-serif;
+            color: #000;
+            background-color: #fff;
+            overflow-x: hidden;
+        }
+        h1, h2, h3, h4, h5, h6 { font-weight: 700; color: #32325d; }
+        a { text-decoration: none; color: inherit; transition: all 0.3s ease; }
+        
+        /* Layout Grid */
+        .container { width: 100%; max-width: 1170px; margin: 0 auto; padding: 0 15px; }
+        .row { display: flex; flex-wrap: wrap; margin: 0 -15px; }
+        .column { padding: 15px; width: 100%; }
+        @media (min-width: 768px) {
+            .col-md-3 { width: 25%; }
+            .col-md-4 { width: 33.333%; }
+            .col-md-5 { width: 41.666%; }
+            .col-md-6 { width: 50%; }
+            .col-md-8 { width: 66.666%; }
+            .col-md-12 { width: 100%; }
+        }
+
+        /* Navigation */
+        header {
+            position: relative;
+            z-index: 100;
+            padding: 20px 0;
+            background: transparent;
+        }
+        .navbar-inner { display: flex; justify-content: space-between; align-items: center; }
+        .logo img { max-width: 180px; }
+        nav.standard ul { list-style: none; display: flex; gap: 30px; }
+        nav.standard ul li a {
+            font-size: 0.9rem;
+            color: #9e9e9e;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+        nav.standard ul li a:hover { color: #000; }
+        .hamburger { display: none; cursor: pointer; }
+        
+        /* Mobile Menu */
+        @media (max-width: 767px) {
+            nav.standard { display: none; }
+            .hamburger { display: block; font-size: 24px; }
+        }
+        #overlay-menu {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(42, 89, 177, 0.95); z-index: 9999;
+        }
+        #overlay-menu .overlay-menu-inner {
+            display: flex; justify-content: center; align-items: center; height: 100%;
+        }
+        #overlay-menu ul { list-style: none; text-align: center; }
+        #overlay-menu ul li { margin: 20px 0; }
+        #overlay-menu ul li a { color: #fff; font-size: 1.5rem; font-weight: 700; }
+        .close-menu-btn { position: absolute; top: 30px; right: 30px; cursor: pointer; color: #fff; font-size: 40px; }
+
+        /* SPA Display Logic */
+        .page-section { display: none; animation: fadeIn 0.5s ease-in-out; }
+        .page-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* General Sections */
+        .content-block { padding: 80px 0; }
+        .content-block-spa { padding: 120px 0 80px; }
+        
+        /* Top Section (Home) */
+        .top-section { position: relative; z-index: 1; padding-top: 60px; }
+        .top-section::before {
+            content: ''; position: absolute; top: -100px; left: 0; width: 40%; height: 500px;
+            background-image: url('images/bg-cover-gradient-new.jpg');
+            background-size: cover; filter: grayscale(1); opacity: 0.5; z-index: -1;
+        }
+        .video-frame {
+            background: rgba(205, 222, 255, 0.16);
+            border-radius: 12px;
+            padding: 15px;
+        }
+        .video-frame video { border-radius: 12px; width: 100%; display: block; }
+        .top-section-text h1 { font-size: 2.8rem; line-height: 1.2; margin-bottom: 20px; }
+        .top-section-text p { font-size: 1.1rem; line-height: 1.6; margin-bottom: 30px; color: #555; }
+        .btn-learn-more {
+            display: inline-block; background-color: #0047ff; color: #fff;
+            padding: 12px 24px; border-radius: 8px; font-weight: 700;
+        }
+        .btn-learn-more:hover { background-color: #003bbd; color: #fff; }
+
+        /* Second Section (Home) */
+        .second-section {
+            background-image: url('images/Frame-125.png');
+            background-size: cover; background-position: center; position: relative;
+        }
+        .second-section-text h2 { color: #fff; font-size: 2.2rem; margin-bottom: 20px; }
+        .second-section-text p, .second-section-text a { color: #fff; font-size: 1.1rem; }
+
+        /* Icons Section */
+        .icon-section { position: relative; }
+        .icon-section h2 { text-align: center; margin-bottom: 20px; }
+        .icon-section p { text-align: center; color: #666; margin-bottom: 50px; max-width: 800px; margin-left: auto; margin-right: auto; }
+        .product-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
+        .btn-p {
+            text-align: center; cursor: pointer; padding: 20px; border-radius: 12px;
+            transition: all 0.3s; width: calc(33.333% - 20px); min-width: 150px;
+        }
+        .btn-p img { max-width: 100px; margin-bottom: 15px; transition: all 0.3s; border-radius: 50%; }
+        .btn-p h6 { font-size: 0.9rem; line-height: 1.4; color: #32325d; transition: all 0.3s; }
+        .btn-p:hover img, .btn-p.btn-active img {
+            box-shadow: 0 0 0 6px #6F94F1, 0 0 0 12px #E1EAFE;
+        }
+        .btn-p:hover h6, .btn-p.btn-active h6 { color: #0047FF; }
+        
+        @media (max-width: 767px) {
+            .btn-p { width: calc(50% - 20px); }
+            .top-section::before { width: 100%; height: 300px; }
+        }
+        @media (max-width: 480px) {
+            .btn-p { width: 100%; display: flex; align-items: center; text-align: left; padding: 10px; }
+            .btn-p img { width: 60px; margin-bottom: 0; margin-right: 15px; }
+        }
+
+        /* Product Details (SPA) */
+        .product-details {
+            background: #f8faff; padding: 40px; border-radius: 12px;
+            margin-top: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            display: none; animation: fadeIn 0.4s ease;
+        }
+        .product-details.active { display: block; }
+        .product-details h2 { color: #0047ff; margin-bottom: 15px; }
+        .product-details p { font-size: 1.1rem; line-height: 1.6; color: #444; }
+
+        /* ลูกค้าของเรา (About Us - Customers) */
+        .customer-logos-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+            align-items: center;
+        }
+        @media (max-width: 991px) {
+            .customer-logos-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+        @media (max-width: 767px) {
+            .customer-logos-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        }
+        @media (max-width: 480px) {
+            .customer-logos-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        }
+        
+        .customer-logo-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 90px; /* กำหนดความสูงให้ทุกกล่องเท่ากัน */
+            padding: 10px;
+            transition: transform 0.3s ease;
+        }
+        .customer-logo-item:hover {
+            transform: scale(1.05);
+        }
+        .customer-logo-item img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; /* ป้องกันภาพผิดสัดส่วน และจัดให้อยู่ในกรอบเสมอ */
+            display: block;
+        }
+
+        /* Footer */
+        footer { background-color: #000; padding: 60px 0; color: #fff; }
+        footer img.footer-logo { max-width: 250px; margin-bottom: 20px; }
+        footer p { color: #ccc; line-height: 1.8; }
+        footer a { color: #fff; }
+        footer a:hover { color: #0047ff; }
+        .footer-contact { display: flex; align-items: center; margin-bottom: 10px; }
+        .footer-contact img { width: 20px; margin-right: 15px; }
+
+        /* Form elements */
+        input[type="text"], input[type="email"], textarea {
+            width: 100%; padding: 15px; margin-bottom: 20px;
+            border: 1px solid #ddd; border-radius: 8px; font-family: inherit;
+        }
+        button[type="submit"] {
+            width: 100%; padding: 15px; background: #0047ff; color: #fff;
+            border: none; border-radius: 8px; font-weight: bold; font-size: 1.1rem;
+            cursor: pointer; transition: background 0.3s;
+        }
+        button[type="submit"]:hover { background: #003bbd; }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER / NAVIGATION -->
+    <header>
+        <div class="container">
+            <div class="navbar-inner">
+                <div class="logo">
+                    <a href="#home" onclick="showPage('home')">
+                        <img src="images/sl-gray.png" alt="Sycapt Logo">
+                    </a>
+                </div>
+                <nav class="standard">
+                    <ul>
+                        <li><a href="#about" onclick="showPage('about')">About Us</a></li>
+                        <li><a href="#products" onclick="showPage('products')">Products & Solutions</a></li>
+                        <li><a href="#contact" onclick="showPage('contact')">Contact Us</a></li>
+                    </ul>
+                </nav>
+                <div class="hamburger open-menu">☰</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MOBILE MENU OVERLAY -->
+    <div id="overlay-menu">
+        <div class="close-menu-btn">&times;</div>
+        <div class="overlay-menu-inner">
+            <ul>
+                <li><a href="#home" onclick="showPage('home')">Home</a></li>
+                <li><a href="#about" onclick="showPage('about')">About Us</a></li>
+                <li><a href="#products" onclick="showPage('products')">Products & Solutions</a></li>
+                <li><a href="#contact" onclick="showPage('contact')">Contact Us</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ==============================================
+         HOME PAGE
+         ============================================== -->
+    <div id="page-home" class="page-section active">
+        <!-- Hero Section -->
+        <section class="content-block top-section">
+            <div class="container">
+                <div class="row" style="align-items: center;">
+                    <div class="column col-md-6">
+                        <div class="video-frame">
+                            <video webkit-playsinline playsinline loop autoplay muted>
+                                <source src="images/currency-4-3.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                    </div>
+                    <div class="column col-md-6 top-section-text">
+                        <h1>Bridging the new digital payment to existing legacy system</h1>
+                        <p>Sycapt provides transaction processing middle layers for banks to adopt new digital payment solutions in order to work with existing legacy infrastructure.</p>
+                        <a href="#products" class="btn-learn-more" onclick="showPage('products')">Learn More ></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Banner Section -->
+        <section class="content-block second-section">
+            <div class="container">
+                <div class="row">
+                    <div class="column col-md-8 second-section-text">
+                        <h2>Sycapt specializes in transaction processing, switching, and message reformatting.</h2>
+                        <p style="margin-bottom: 15px;">Our solutions can interface with multiple hosts with different message formats.</p>
+                        <a href="#about" onclick="showPage('about')" style="font-weight: bold;">About Us ></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products Preview Section -->
+        <section class="content-block icon-section">
+            <div class="container">
+                <h2>Our Products and Solutions</h2>
+                <p>Our products and solutions are designed and built on Sycapt unified OLTP platform. They can serve a variety of business requirements and complex business rules. Below are some of our standard products with brief information:</p>
+                
+                <div class="product-grid">
+                    <div class="btn-p btn-p-dcc" onclick="showPage('products', 'dcc')">
+                        <img src="images/1.png" alt="DCC">
+                        <h6>Dynamic Currency<br>Conversion (DCC)</h6>
+                    </div>
+                    <div class="btn-p btn-p-fleet" onclick="showPage('products', 'fleet')">
+                        <img src="images/fleetcard.png" alt="Fleet Card">
+                        <h6>Fleet Card<br>System</h6>
+                    </div>
+                    <div class="btn-p btn-p-ipp" onclick="showPage('products', 'ipp')">
+                        <img src="images/recurring-icon-new.png" alt="IPP">
+                        <h6>Installment<br>Payment Plan (IPP)</h6>
+                    </div>
+                    <div class="btn-p btn-p-transac" onclick="showPage('products', 'transac')">
+                        <img src="images/transaction-new-logo.png" alt="Transaction Gateway">
+                        <h6>Transaction<br>Gateway & Switching</h6>
+                    </div>
+                    <div class="btn-p btn-p-recur" onclick="showPage('products', 'recur')">
+                        <img src="images/recurring-new-logo.png" alt="Recurring Payment">
+                        <h6>Recurring<br>Payment System</h6>
+                    </div>
+                    <div class="btn-p btn-p-ali" onclick="showPage('products', 'ali')">
+                        <img src="images/ali-icon-text.png" alt="Alipay">
+                        <h6>Alipay & WeChat<br>Acquiring System</h6>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ==============================================
+         ABOUT US PAGE
+         ============================================== -->
+    <div id="page-about" class="page-section content-block-spa">
+        <div class="container">
+            <!-- ส่วนเนื้อหาประวัติบริษัท -->
+            <div class="row">
+                <div class="column col-md-12" style="text-align: center; margin-bottom: 40px;">
+                    <h1 style="color: #32325d; margin-bottom: 30px;">About Us</h1>
+                    <p style="font-size: 1.15rem; line-height: 1.8; color: #444; max-width: 900px; margin: 0 auto 20px auto;">
+                        Sycapt was established in 2002 with business focus on transaction processing and switching. Our products and solutions are designed to adopt new digital payment trends and bridge them with existing infrastructures.
+                    </p>
+                    <p style="font-size: 1.15rem; line-height: 1.8; color: #444; max-width: 900px; margin: 0 auto;">
+                        Our solutions fulfill customer expectations for timeliness, differentiation, new technology, and adoption of customer-facing applications/devices. These are the reasons why Sycapt has become the preferred vendor and has been providing many solutions to financial institutions, fintech companies, oil companies, etc.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- รูปภาพประกอบ (แสดงภาพบรรยากาศหรือออฟฟิศ) -->
+            <div class="row">
+                <div class="column col-md-12" style="text-align: center; margin-bottom: 60px;">
+                    <img src="images/bg-cover-gradient-new.jpg" alt="Sycapt Team and Office" style="width: 100%; max-width: 1000px; height: 400px; object-fit: cover; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                </div>
+            </div>
+
+            <!-- ส่วนอธิบายลูกค้า -->
+            <div class="row">
+                <div class="column col-md-12" style="text-align: center; margin-bottom: 30px;">
+                    <h2 style="color: #32325d; margin-bottom: 20px;">Our Customers</h2>
+                    <p style="font-size: 1.15rem; line-height: 1.8; color: #444; max-width: 900px; margin: 0 auto;">
+                        Over the decades, Sycapt has been providing products and solutions for our customers. They are in many segments such as financial institutions, oil companies, fintech companies, etc. Sycapt has proven its performance and reputation in the market. Below are some of our customers using our products and services.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Grid แสดงโลโก้ลูกค้า -->
+            <div class="customer-logos-grid">
+                <div class="customer-logo-item"><img src="images/kbank-logo.png" alt="Kasikorn Bank"></div>
+                <div class="customer-logo-item"><img src="images/scb-logo.png" alt="SCB"></div>
+                <div class="customer-logo-item"><img src="images/bbl-logo.png" alt="Bangkok Bank"></div>
+                <div class="customer-logo-item"><img src="images/uob-logo.png" alt="UOB"></div>
+                <div class="customer-logo-item"><img src="images/krungsri-logo.png" alt="Krungsri"></div>
+                
+                <div class="customer-logo-item"><img src="images/ttb-logo.png" alt="TTB"></div>
+                <div class="customer-logo-item"><img src="images/ktc-logo.png" alt="KTC"></div>
+                <div class="customer-logo-item"><img src="images/maybank-logo.png" alt="Maybank"></div>
+                <div class="customer-logo-item"><img src="images/cimb-logo.png" alt="CIMB Thai"></div>
+                <div class="customer-logo-item"><img src="images/publicbank-logo.png" alt="Public Bank"></div>
+                
+                <div class="customer-logo-item"><img src="images/siamtakashimaya-logo.png" alt="Siam Takashimaya"></div>
+                <div class="customer-logo-item"><img src="images/dolfin-logo.png" alt="Dolfin"></div>
+                <div class="customer-logo-item"><img src="images/true-logo.png" alt="True"></div>
+                <div class="customer-logo-item"><img src="images/caltex-logo.png" alt="Caltex"></div>
+                <div class="customer-logo-item"><img src="images/chevron-logo.png" alt="Chevron"></div>
+                
+                <div class="customer-logo-item"><img src="images/petrotrade-logo.png" alt="PetroTrade"></div>
+                <div class="customer-logo-item"><img src="images/okgroup-logo.png" alt="OK Group"></div>
+                <div class="customer-logo-item"><img src="images/susco-logo.png" alt="Susco"></div>
+                <div class="customer-logo-item"><img src="images/mc-logo.png" alt="Mc"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==============================================
+         PRODUCTS & SOLUTIONS PAGE
+         ============================================== -->
+    <div id="page-products" class="page-section content-block-spa">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 50px;">
+                <h1>Products & Solutions</h1>
+                <p style="font-size: 1.1rem; color: #666; margin-top: 10px;">Select a product below to learn more about our unified OLTP platform capabilities.</p>
+            </div>
+            
+            <div class="product-grid" style="margin-bottom: 40px;">
+                <div class="btn-p btn-prod btn-p-dcc" onclick="toggleProduct('dcc')">
+                    <img src="images/1.png" alt="DCC">
+                    <h6>Dynamic Currency<br>Conversion</h6>
+                </div>
+                <div class="btn-p btn-prod btn-p-fleet" onclick="toggleProduct('fleet')">
+                    <img src="images/fleetcard.png" alt="Fleet Card">
+                    <h6>Fleet Card<br>System</h6>
+                </div>
+                <div class="btn-p btn-prod btn-p-ipp" onclick="toggleProduct('ipp')">
+                    <img src="images/recurring-icon-new.png" alt="IPP">
+                    <h6>Installment<br>Payment Plan</h6>
+                </div>
+                <div class="btn-p btn-prod btn-p-transac" onclick="toggleProduct('transac')">
+                    <img src="images/transaction-new-logo.png" alt="Transaction">
+                    <h6>Transaction Gateway<br>& Switching</h6>
+                </div>
+                <div class="btn-p btn-prod btn-p-recur" onclick="toggleProduct('recur')">
+                    <img src="images/recurring-new-logo.png" alt="Recurring">
+                    <h6>Recurring<br>Payment System</h6>
+                </div>
+                <div class="btn-p btn-prod btn-p-ali" onclick="toggleProduct('ali')">
+                    <img src="images/ali-icon-text.png" alt="Alipay">
+                    <h6>Alipay & WeChat<br>Acquiring</h6>
+                </div>
+            </div>
+
+            <!-- Detail Panels -->
+            <div id="p-section">
+                <div id="desc-dcc" class="product-details p-item">
+                    <h2>Dynamic Currency Conversion (DCC)</h2>
+                    <p>Our DCC solution allows international cardholders to pay in their home currency directly at the Point of Sale. It enhances the customer experience by providing full transparency on exchange rates, while offering merchants and acquirers an additional revenue stream.</p>
+                </div>
+                <div id="desc-fleet" class="product-details p-item">
+                    <h2>Fleet Card System</h2>
+                    <p>A comprehensive fleet card management system tailored for gas stations and corporate fleets. It allows deep integration with terminal points to manage spending limits, track driver activity, and optimize corporate fuel expenditures securely.</p>
+                </div>
+                <div id="desc-ipp" class="product-details p-item">
+                    <h2>Installment Payment Plan (IPP)</h2>
+                    <p>Flexible installment payment solutions that allow merchants to offer "buy now, pay later" features directly at the checkout. Our engine effortlessly handles complex payment splitting and bank integration to ensure seamless approvals.</p>
+                </div>
+                <div id="desc-transac" class="product-details p-item">
+                    <h2>Transaction Gateway & Switching</h2>
+                    <p>A robust and secure payment gateway for routing and switching transactions across multiple legacy and modern systems. We reformat messages in real-time, bridging the gap between old infrastructures and new digital wallets seamlessly.</p>
+                </div>
+                <div id="desc-recur" class="product-details p-item">
+                    <h2>Recurring Payment System</h2>
+                    <p>Automate subscription billing and recurring payments securely with our flexible processing engine. Perfect for utility companies, insurance, fitness clubs, and SaaS providers who need reliable scheduled payment execution.</p>
+                </div>
+                <div id="desc-ali" class="product-details p-item">
+                    <h2>Alipay & WeChat Acquiring System</h2>
+                    <p>Seamlessly integrate with China's top digital wallets to accept payments from Chinese tourists and cross-border shoppers. Our acquiring system processes QR code payments rapidly and safely.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==============================================
+         CONTACT US PAGE
+         ============================================== -->
+    <div id="page-contact" class="page-section content-block-spa">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 50px;">
+                <h1 style="color: #0047ff; font-size: 3.5rem; margin-bottom: 15px;">Contact Us</h1>
+                <p style="font-size: 1.1rem; color: #666;">We are ready to support your business. Reach out to our team today.</p>
+            </div>
+            
+            <div class="row">
+                <!-- ด้านซ้าย: แผนที่ Google Map (แนวตั้ง) -->
+                <div class="column col-md-6" style="padding-right: 30px; margin-bottom: 30px;">
+                    <div style="width: 100%; height: 100%; min-height: 650px; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+                        <iframe src="https://maps.google.com/maps?q=Sycapt%20Company%20Limited,%201126/1%20Thanon%20Phetchaburi,%20Bangkok&t=&z=16&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0; min-height: 650px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+
+                <!-- ด้านขวา: ข้อมูล Head Office และฟอร์มติดต่อ (แนวเดียวกัน) -->
+                <div class="column col-md-6" style="display: flex; flex-direction: column;">
+                    
+                    <!-- ข้อมูลติดต่อ (อยู่ด้านบน) -->
+                    <div style="margin-bottom: 40px;">
+                        <h3 style="margin-bottom: 20px; font-size: 1.8rem; color: #32325d;">Head Office</h3>
+                        <p style="font-size: 1.15rem; line-height: 1.8; margin-bottom: 30px; color: #444;">
+                            <strong>Sycapt Company Limited</strong><br>
+                            Unit 904, Vanit Place, Building 1,<br>
+                            1126/1 Thanon Phetchaburi, Khwaeng Makkasan,<br>
+                            Khet Ratchathewi, Krung Thep Maha Nakhon 10400
+                        </p>
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <img src="images/phone-2.png" alt="Phone" style="width: 24px; margin-right: 15px;">
+                            <a href="tel:+6622516084" style="font-size: 1.25rem; font-weight: bold; color: #0047ff;">+66-2-251-6084</a>
+                        </div>
+                        <div style="display: flex; align-items: center;">
+                            <img src="images/envelope-2.png" alt="Email" style="width: 24px; margin-right: 15px;">
+                            <a href="mailto:marketing@sycapt.com" style="font-size: 1.25rem; font-weight: bold; color: #0047ff;">marketing@sycapt.com</a>
+                        </div>
+                    </div>
+
+                    <!-- ฟอร์มกรอกข้อมูล (อยู่ด้านล่างข้อมูลติดต่อ) -->
+                    <div style="background: #f8faff; padding: 40px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); flex-grow: 1;">
+                        <form id="contact-form">
+                            <input type="text" placeholder="Your Name" required>
+                            <input type="email" placeholder="Your Email" required>
+                            <textarea placeholder="Message" rows="5" required></textarea>
+                            <button type="submit">Send Message</button>
+                            <div id="form-success-msg" style="display:none; color: #00d084; margin-top: 15px; text-align: center; font-weight: bold;">Message submitted successfully!</div>
+                        </form>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==============================================
+         GLOBAL FOOTER
+         ============================================== -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="column col-md-4">
+                    <img src="images/sl-gray-footer.png" alt="Sycapt Logo" class="footer-logo">
+                </div>
+                <div class="column col-md-4">
+                    <p style="margin-bottom: 20px;">
+                        <strong>Sycapt Co., Ltd.</strong><br>
+                        1126/1 Vanit Place 1 Building, 9F, <br>
+                        Unit 904, Phetchaburi Rd., Makkasan,<br>
+                        Ratchathewi, Bangkok 10400, Thailand
+                    </p>
+                </div>
+                <div class="column col-md-4">
+                    <div class="footer-contact">
+                        <img src="images/phone.png" alt="Phone">
+                        <a href="tel:+6622516084">+66-2-251-6084</a>
+                    </div>
+                    <div class="footer-contact">
+                        <img src="images/envelope.png" alt="Email">
+                        <a href="mailto:marketing@sycapt.com">marketing@sycapt.com</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SPA LOGIC SCRIPT (Vanilla JS) -->
+    <script>
+        // Navigation function
+        function showPage(pageId, productStr = null) {
+            // Hide all pages
+            document.querySelectorAll('.page-section').forEach(function(el) {
+                el.classList.remove('active');
+            });
+            
+            // Show target page
+            const targetPage = document.getElementById('page-' + pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Close mobile menu if open
+            document.getElementById('overlay-menu').style.display = 'none';
+
+            // Auto select product if directed from Home
+            if (pageId === 'products' && productStr) {
+                // Short delay to ensure page is visible before scrolling
+                setTimeout(() => toggleProduct(productStr), 100);
+            }
+        }
+
+        // Product selection function
+        function toggleProduct(productStr) {
+            // Reset all buttons and descriptions
+            document.querySelectorAll('.btn-prod').forEach(el => el.classList.remove('btn-active'));
+            document.querySelectorAll('.product-details').forEach(el => el.classList.remove('active'));
+
+            // Activate chosen button and description
+            const activeBtn = document.querySelector('.btn-p-' + productStr);
+            const activeDesc = document.getElementById('desc-' + productStr);
+
+            if (activeBtn) activeBtn.classList.add('btn-active');
+            if (activeDesc) activeDesc.classList.add('active');
+
+            // Scroll to details panel
+            const pSection = document.getElementById('p-section');
+            if (pSection) {
+                const yOffset = pSection.getBoundingClientRect().top + window.scrollY - 80;
+                window.scrollTo({ top: yOffset, behavior: 'smooth' });
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // Mobile Menu Toggle
+            const overlay = document.getElementById('overlay-menu');
+            document.querySelector('.open-menu').addEventListener('click', () => {
+                overlay.style.display = 'block';
+            });
+            document.querySelector('.close-menu-btn').addEventListener('click', () => {
+                overlay.style.display = 'none';
+            });
+
+            // Form Submit Mockup
+            document.getElementById('contact-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                document.getElementById('form-success-msg').style.display = 'block';
+                this.reset();
+                setTimeout(() => {
+                    document.getElementById('form-success-msg').style.display = 'none';
+                }, 3000);
+            });
+            
+        });
+    </script>
+</body>
+</html>
